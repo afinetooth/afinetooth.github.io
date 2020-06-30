@@ -22,6 +22,14 @@ To follow along with this post, you'll need the following:
 
 * We'll create a free Coveralls account along the way.
 
-# A Simple App with Tests, and Test Coverage
+# Some Basic Concepts
+
+Chances are you're familiar with testing, but if test coverage is new to you, here's how it works:
+
+For a project made up of code and tests, a test coverage library can be added, whose job it is to assess how well the project's code is being covered by its tests. Each language has its share of code coverage libaries. In the case of our simple Ruby project, we'll be using a library called Simplecov, which comes packaged as a Rubygem. On each run of your project's test suite, the test coverage library generates a test coverage report.
+
+The test coverage report is different each time we add code to our project. It's the test coverage report that we send to a test coverage service like Coveralls, which compares our report to previous builds to track how test coverage changes over time.
+
+# The Simplest Possible App&mdash;with Tests and Test Coverage
 
 
