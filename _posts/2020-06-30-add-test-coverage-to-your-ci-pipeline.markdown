@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "How to add test coverage to your CI/CD pipeline"
+title:  "Add test coverage to your CI/CD pipeline"
 date:   2020-06-30 09:55:52 -0700
 categories: CI CD Test Coverage
 ---
