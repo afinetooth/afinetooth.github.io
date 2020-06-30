@@ -7,7 +7,7 @@ categories: CI CD Test Coverage
 
 One of the key indicators of a healthy codebase is test coverage. Once you've bought into the value of continuous integration and deployment, it just makes sense to add a test coverage service to track changes to your project's test coverage over time. Not only can it ensure tests increase at the same rate as code, it can also help you control your development workflow with pass/fail checks and PR comments showing where coverage lacks and how to improve it.
 
-In this tutorial we're going to put the simplest possible codebase&mdash;with tests and test coverage&mdash;into a CI pipeline at CircleCI, then configure CircleCI to send our project's test coverage results to Coveralls, a popular test coverage service used by some of the world's biggest open source projects. 
+In this tutorial we're going to put the simplest possible codebase&mdash;with tests and test *coverage*&mdash;into a CI pipeline at CircleCI, then configure CircleCI to send our project's test coverage results to Coveralls, a popular test coverage service used by some of the world's biggest open source projects. 
 
 We're going to do this by employing CircleCI's Orb technology, which makes it fast and easy to integrate with third-party tools like Coveralls. 
 
