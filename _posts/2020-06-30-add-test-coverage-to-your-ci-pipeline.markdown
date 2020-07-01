@@ -358,7 +358,7 @@ Great! Coveralls is now tracking your repo.
 
 ---
 
-__[WIP] *Complete section*__
+__*[WIP] COMPLETE SECTION*__
 
 ---
 
@@ -386,7 +386,7 @@ end
 
 ---
 
-__// [WIP] *Complete section*__
+__// *[WIP] COMPLETE SECTION*__
 
 ---
 
