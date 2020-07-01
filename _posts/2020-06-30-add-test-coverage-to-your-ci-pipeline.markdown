@@ -275,14 +275,14 @@ workflows:
       - build:
 ```
 
+[WIP] *What do those config settings mean?*
+
 Save the file and commit it:
 
 ```
 git add .
 git commit -m "Add .circleci/config.yml."
 ```
-
-[WIP] *What do those config settings mean?*
 
 And guess what?
 
