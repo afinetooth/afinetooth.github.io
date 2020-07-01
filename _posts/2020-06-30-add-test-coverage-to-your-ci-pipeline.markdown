@@ -356,7 +356,35 @@ Great! Coveralls is now tracking your repo.
 
 # Finish setup
 
-[WIP] *Complete section*
+---
+
+__[WIP] *Complete section*__
+
+1. Note that the new CircleCI Ruby orb includes the `rspec-test` command, which automates parallel testing with a default test results dir: `/tmp/test-results/rspec`.
+
+2. Since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:
+
+```ruby
+gem 'simplecov-lcov'
+gem 'rspec_junit_formatter'
+```
+
+And change the Simplecov configuration in our `spec_helper`:
+
+```ruby
+require 'simplecov'
+require 'simplecov-lcov'
+
+SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
+SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
+SimpleCov.start do
+  add_filter "/spec/"
+end
+```
+
+__[WIP] *// Complete section*__
+
+---
 
 # Get badged
 
