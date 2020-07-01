@@ -340,7 +340,7 @@ But before we can set this up, we'll need to create a new account at [Coveralls]
 
 # Add the project to Coveralls
 
-To add your repo to [Coveralls](https://coveralls.io/sign-in), go to http://coveralls.io/sign-in and __Sign In__ with GitHub:
+To add your repo to [Coveralls](https://coveralls.io/sign-in), go to [http://coveralls.io/sign-in](http://coveralls.io/sign-in) and __Sign In__ with GitHub:
 
 ![coveralls-sign-in.png]({{ site.url }}/assets/coveralls-sign-in.png)
 
