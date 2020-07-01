@@ -334,6 +334,10 @@ That means our tests passed and, therefore, our build succeeded.
 
 Now, let's tell CircleCI to start sending test coverage results to Coveralls.
 
+We're in luck here, since Coveralls has published a [Coveralls Orb](https://circleci.com/orbs/registry/orb/coveralls/coveralls) following the [CircleCI Orb standard](https://circleci.com/docs/2.0/orb-intro/), which makes this plug-and-play.
+
+But before we can set this up, we'll need to create a new account at [Coveralls](https://coveralls.io/), which is free for individual developers with open source (public) repos.
+
 # Add the project to Coveralls
 
 To add your repo to [Coveralls](https://coveralls.io/sign-in), go to http://coveralls.io/sign-in and __Sign In__ with GitHub:
