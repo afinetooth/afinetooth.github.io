@@ -233,7 +233,7 @@ Then you'll see the New Project Set Up page for your project (ours is called `co
 
 Here you have the choice to let CircleCI walk you through setting up your project, or add your own config file manually.
 
-We're going to add our config file manually because in this context it's actually simpler, and quicker, so Click __Add Manually__:
+We're going to add our config file manually in order to get a closer look, so Click __Add Manually__:
 
 ![circleci-start-project-options.png]({{ site.url }}/assets/circleci-start-project-options.png)
 
@@ -273,10 +273,6 @@ workflows:
   build_and_test:
     jobs:
       - build:
-        filters:
-          branches:
-            only:
-              - circle-ci
 ```
 
 Save the file and commit it:
@@ -285,6 +281,8 @@ Save the file and commit it:
 git add .
 git commit -m "Add .circleci/config.yml."
 ```
+
+[WIP] *What do those config settings mean?*
 
 And guess what?
 
