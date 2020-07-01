@@ -27,7 +27,7 @@ Note: *We'll create a free Coveralls account along the way.*
 
 If you're new to test *coverage*, here's how it works:
 
-For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being covered by its tests. In the case of our Ruby project, we'll use a library called Simplecov, which comes packaged as a Rubygem.
+For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being covered by its tests. (*In the case of our Ruby project, we'll use a library called Simplecov, which comes packaged as a Rubygem.*)
 
 On each run of your project's test suite, the test coverage *library* generates a test coverage *report*, like so:
 
@@ -41,7 +41,7 @@ Since this test coverage *report* changes each time we add code to our project, 
 
 1. You push changes to your code at your SCM (GitHub).
 2. Your CI service builds your project, runs your tests, and generates your test coverage report.
-3. Your CI posts the report to Coveralls.
+3. Your CI posts the test coverage report to Coveralls.
 4. Coveralls publishes your coverage changes to a shared workspace.
 5. (Optionally) Coveralls sends comments and pass/fail checks to your PRs to control your development workflow.
 
@@ -134,7 +134,7 @@ Finished in 0.0028 seconds (files took 1 second to load)
 Coverage report generated for RSpec to /Users/jameskessler/Workspace/2020/afinetooth/coveralls-demo-ruby/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-In additional to the test results themselves, Simplecov tells us it generated a test coverage report for us in the new `/coverage` directory.
+Notice that, in additional to the test results themselves, Simplecov is telling us it generated a test coverage report for us in a new `/coverage` directory.
 
 Conveniently, it generated those results in HTML format, which we can open like this:
 
@@ -211,7 +211,7 @@ But first we'll need to set up the CI pipeline.
 
 *If you want to follow along, now's a good time to fork the project from this repo and clone it down to your local machine. Once you've done that, you can follow these steps with your own copy.*
 
-To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) at https://circleci.com/vcs-authorize/ with your GitHub login*:
+To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) at [https://circleci.com/vcs-authorize/](https://circleci.com/vcs-authorize/) with your GitHub login:
 
 ![circleci-login.png]({{ site.url }}/assets/circleci-login.png)
 
@@ -241,13 +241,13 @@ You'll receive a prompt asking if you've already added a `./circle/config.yml` f
 
 ![circleci-start-project-add-config-manually.png]({{ site.url }}/assets/circleci-start-project-add-config-manually.png)
 
-You haven't, so let's go do that now.
-
-Just leave that window alone. We'll come back to it.
+We haven't, so let's go do that now.
 
 # Add a `.circle/config.yml` to the project repo
 
 At the base directory of your project, create a new, empty file called `.circleci/config.yml`.
+
+[IMAGE] *Base project showing new `.circle/config.yml`*
 
 Now, paste the following configuration settings into your empty ``.circleci/config.yml`:
 
@@ -341,11 +341,11 @@ Voilà:
 
 Your repo is badged!
 
-## verify changes in test coverage via Coveralls
+## Verify changes in test coverage via Coveralls
 
 Since we understand how test coverage works in this project, let's verify those same results through the Coveralls service.
 
-[WIP] *Change tests back and push first build to Coveralls.*
+[WIP] *Change tests back to 80% coverage state and push first build to Coveralls.*
 
 If you've already configured your project to use Coveralls & CircleCI, then CircleCI has already pushed your first build to Coveralls, and you've noted that coverage stands at 80%:
 
@@ -357,9 +357,9 @@ The badge on your repo reinforces that:
 
 Now let's validate that Coveralls is tracking changes in test coverage on our project.
 
-To do that, let's add a test that lifts coverage to 100%.
+To do that, let's re-add that test that lifts coverage to 100%.
 
-Open the test file, /spec/class_one_spec.rb, and uncomment the second test in the file, so that this:
+Open the test file, `/spec/class_one_spec.rb`, and uncomment the second test in the file, so that this:
 
 ```ruby
 require 'spec_helper'
