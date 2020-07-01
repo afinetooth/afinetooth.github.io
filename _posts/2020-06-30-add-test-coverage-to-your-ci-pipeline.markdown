@@ -360,6 +360,8 @@ Great! Coveralls is now tracking your repo.
 
 __[WIP] *Complete section*__
 
+---
+
 1. Note that the new CircleCI Ruby orb includes the `rspec-test` command, which automates parallel testing with a default test results dir: `/tmp/test-results/rspec`.
 
 2. Since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:
@@ -382,9 +384,14 @@ SimpleCov.start do
 end
 ```
 
-__[WIP] *// Complete section*__
+---
+
+__// [WIP] *Complete section*__
 
 ---
+
+
+
 
 # Get badged
 
