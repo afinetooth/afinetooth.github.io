@@ -227,13 +227,13 @@ Click Set Up Project next to your newly forked project:
 
 ![circleci-setup-project-coveralls-demo-ruby.png]({{ site.url }}/assets/circleci-setup-project-coveralls-demo-ruby.png)
 
-Then you'll see the New Project Set Up page for `coveralls-demo-ruby`:
+Then you'll see the New Project Set Up page for your project (ours is called `coveralls-demo-ruby`):
 
 ![circleci-project-ready-prompt.png]({{ site.url }}/assets/circleci-project-ready-prompt.png)
 
-Here you have the choice to let CircleCI walk you through setting up your project, or add your own config file manually. We're going to add our config file manually because in this context it's actually simpler, and quicker, so...
+Here you have the choice to let CircleCI walk you through setting up your project, or add your own config file manually.
 
-Click __Add Manually__:
+We're going to add our config file manually because in this context it's actually simpler, and quicker, so Click __Add Manually__:
 
 ![circleci-start-project-options.png]({{ site.url }}/assets/circleci-start-project-options.png)
 
@@ -243,20 +243,21 @@ You'll receive a prompt asking if you've already added a `./circle/config.yml` f
 
 We haven't, so let's go do that now.
 
-# Add a `.circle/config.yml` to the project repo
+# Add a `.circleci/config.yml` to the project repo
 
 At the base directory of your project, create a new, empty file called `.circleci/config.yml`.
 
-[IMAGE] *Base project showing new `.circle/config.yml`*
+```
+vi .circleci/config.yml
+```
 
-Now, paste the following configuration settings into your empty ``.circleci/config.yml`:
+Now, paste the following configuration settings into your empty `.circleci/config.yml`:
 
 ```ruby
 version: 2.1
 
 orbs:
   ruby: circleci/ruby@1.0
-  coveralls: coveralls/coveralls@1.0.4
 
 jobs:
   build:
@@ -266,8 +267,6 @@ jobs:
       - checkout
       - ruby/install-deps
       - ruby/rspec-test
-      - coveralls/upload:
-          path_to_lcov: ./coverage/lcov/project.lcov
 
 workflows:
   version: 2.1
@@ -290,6 +289,48 @@ git commit -m "Add .circleci/config.yml."
 And guess what?
 
 That's it! CircleCI is building your project in its remote CI environment.
+
+# Confirm your first build
+
+CircleCI started building your project the moment you pushed that last commit:
+
+```
+git push -u origin master
+```
+
+To prove that to yourself, just visit your project at [CircleCI](https://app.circleci.com/).
+
+For me, that meant going here:<br />
+[https://app.circleci.com/pipelines/github/afinetooth/coveralls-demo-ruby](https://app.circleci.com/pipelines/github/afinetooth/coveralls-demo-ruby)
+
+Your URL will be different, but should follow this format:
+
+```
+https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
+```
+
+Your first build should look something like this:
+
+![circleci-first-build-success.png]({{ site.url }}/assets/circleci-first-build-success.png)
+
+A successful build&mdash;albeit, without much going on.
+
+Notice those test results, which look the same as on our local machine:
+
+```ruby
+bundle exec rspec
+
+ClassOne
+  covered
+    returns 'covered'
+
+Finished in 0.00127 seconds (files took 0.11459 seconds to load)
+1 example, 0 failures
+
+Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
+```
+
+That means our tests passed and, therefore, our build succeeded.
 
 ## Configure the project to use Coveralls
 
@@ -341,7 +382,7 @@ Voilà:
 
 Your repo is badged!
 
-## Verify changes in test coverage via Coveralls
+## Verify test coverage via Coveralls
 
 Since we understand how test coverage works in this project, let's verify those same results through the Coveralls service.
 
