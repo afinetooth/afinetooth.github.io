@@ -4,6 +4,6 @@ title: About
 permalink: /about/
 ---
 
-This is the development blog of James Kessler, CTO of American Field, previously Director of Technology at Buck Mason.
+This is the development blog of James Kessler, CTO of [American Field](https://shopaf.co/) and, previously, Director of Technology at [Buck Mason](http://buckmason.com/).
 
-I can be found at GitHub under the username, [afinetooth](https://github.com/afinetooth).
+At GitHub I can be found under the username, [afinetooth](https://github.com/afinetooth).
