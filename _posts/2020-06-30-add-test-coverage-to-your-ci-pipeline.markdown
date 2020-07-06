@@ -440,7 +440,19 @@ Now we're exporting test results in XML format.
 Do stuff
 ```
 
-3. Finally, what else?
+Next, we'll install the Coveralls Orb for CircleCI and tell it where to find our test results:
+
+1. We'll install the Coveralls Orb by adding it to our `.circelci/config.yml`, like so:
+
+```
+Show changes to config.
+```
+
+2. Then we'll tell coveralls where to find the test results it will upload to the Coveralls API:
+
+```
+Config
+```
 
 ---
 
