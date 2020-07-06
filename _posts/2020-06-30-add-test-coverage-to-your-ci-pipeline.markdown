@@ -209,7 +209,9 @@ But first we'll need to set up the CI pipeline.
 
 # Add the project to CircleCI
 
-*If you want to follow along, now's a good time to fork the project from this repo and clone it down to your local machine. Once you've done that, you can follow these steps with your own copy.*
+*If you want to follow along, now's a good time to fork the project from this repo and clone it down to your local machine. Once you've done that, you can follow these steps with your own copy*
+
+*Note: From here forward we'll assume you're starting with a fresh project with no changes to the original. In other words, with test coverage starting at 80%.*
 
 To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) at [https://circleci.com/vcs-authorize/](https://circleci.com/vcs-authorize/) with your GitHub login:
 
@@ -227,7 +229,7 @@ Click Set Up Project next to your newly forked project:
 
 ![circleci-setup-project-coveralls-demo-ruby.png]({{ site.url }}/assets/circleci-setup-project-coveralls-demo-ruby.png)
 
-Then you'll see the New Project Set Up page for your project (ours is called `coveralls-demo-ruby`):
+Then you'll see the New Project Set Up page for your project:
 
 ![circleci-project-ready-prompt.png]({{ site.url }}/assets/circleci-project-ready-prompt.png)
 
@@ -275,7 +277,32 @@ workflows:
       - build:
 ```
 
-[WIP] *What do those config settings mean?*
+---
+
+__[WIP]__
+
+__WHAT DO THOSE CONFIG SETTINGS MEAN?__
+
+---
+
+__[DRAFT]__
+
+1. We are using CircleCI's v2.1 configuration for pipelines
+2. It includes a simple workflow
+3. And CircleCI's newly provisioned [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby) from the CircleCI Orb Registry
+4. This makes quick work of setting up a new Ruby project
+5. And it even includes a built-in command for running rspec tests, called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test)
+6. Not only does this make it simple to run our rspec test suite, but it also gives us some freebies, including:
+7. Freebie: Automatic Parallelization
+8. Freebie: Default Test Results Directory
+
+#### Why Automatic Parallelization?
+It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.
+
+#### Why a Default Test Results Directory?
+As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.
+
+---
 
 Save the file and commit it:
 
@@ -336,7 +363,7 @@ Now, let's tell CircleCI to start sending test coverage results to Coveralls.
 
 We're in luck here, since Coveralls has published a [Coveralls Orb](https://circleci.com/orbs/registry/orb/coveralls/coveralls) following the [CircleCI Orb standard](https://circleci.com/docs/2.0/orb-intro/), which makes this plug-and-play.
 
-But before we can set this up, we'll need to create a new account at [Coveralls](https://coveralls.io/), which is free for individual developers with open source (public) repos.
+But before we can set this up, we'll need to create a new account at [Coveralls](https://coveralls.io/), which is free for individual developers with public (open source) repos.
 
 # Add the project to Coveralls
 
@@ -358,9 +385,13 @@ Great! Coveralls is now tracking your repo.
 
 ---
 
-__*[WIP] COMPLETE SECTION*__
+__[WIP]__
+
+__FINISH SETUP AT COVERALLS__
 
 ---
+
+__[DRAFT]__
 
 1. Note that the new CircleCI Ruby orb includes the `rspec-test` command, which automates parallel testing and establishes a default test results dir: `/tmp/test-results/rspec`.
 
@@ -385,12 +416,6 @@ end
 ```
 
 ---
-
-__// *[WIP] COMPLETE SECTION*__
-
----
-
-
 
 
 # Get badged
