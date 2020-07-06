@@ -5,12 +5,14 @@ date:   2020-06-30 09:55:52 -0700
 categories: CI CD Test Coverage
 ---
 
+<a name="title"></a>
 One of the key indicators of a healthy codebase is test coverage. Once you've bought into the value of CI/CD, it just makes sense to add a test coverage service to track changes to your project's test coverage over time. Not only can it ensure tests increase at the same rate as code, it can also help you control your development workflow with pass/fail checks and PR comments showing where coverage lacks and how to improve it.
 
 In this tutorial we're going to put a simple codebase with test coverage into a CI pipeline at CircleCI, then configure CircleCI to send our project's test coverage results to Coveralls, a popular test coverage service used by some of the world's biggest open source projects.
 
 We're going to do this by employing CircleCI's Orb technology, which makes it fast and easy to integrate with third-party tools like Coveralls.
 
+<a name="prerequisites"></a>
 ## Prerequisites
 
 To follow along with this post, you'll need the following:
@@ -21,8 +23,10 @@ To follow along with this post, you'll need the following:
 
 Note: *We'll create a free Coveralls account along the way.*
 
+<a name="basic_concepts"></a>
 ## Basic Concepts
 
+<a name="basic_concepts-test_coverage"></a>
 # Test *coverage*, not tests
 
 If you're new to test *coverage*, here's how it works:
@@ -35,6 +39,7 @@ On each run of your project's test suite, the test coverage *library* generates 
 
 Since this test coverage *report* changes each time we add code to our project, the *report* is what we send to a service like Coveralls, which compares it to previous reports and tracks how our test coverage changes over time.
 
+<a name="basic_concepts-how_it_works_in_ci"></a>
 # How it works in CI/CD
 
 ![test coverage in CI/CD]({{ site.url }}/assets/test_coverage_in_ci.png)
@@ -45,6 +50,7 @@ Since this test coverage *report* changes each time we add code to our project, 
 4. Coveralls publishes your coverage changes to a shared workspace.
 5. (Optionally) Coveralls sends comments and pass/fail checks to your PRs to control your development workflow.
 
+<a name="simple_app"></a>
 ## A Simple App&mdash;with Test Coverage
 
 Here's an extremely simple Ruby project employing both tests and test coverage:
@@ -113,6 +119,7 @@ SimpleCov.start do
 end
 ```
 
+<a name="simple_app-run_tests"></a>
 # Run tests
 
 Let's run the test suite for the first time and see what the results are:
@@ -156,6 +163,7 @@ Where you'll notice covered lines in green, and uncovered lines in red.
 
 In our case, 4/5 lines are covered, indicating 80% coverage.
 
+<a name="simple_app-add_tests"></a>
 # Add tests and see coverage change
 
 To "add" tests, simply un-comment the test of the second method in ClassOne:
@@ -201,12 +209,14 @@ And now, if we click on `lib/class_one.rb` we see:
 
 Five (5) out of five (5) relevant lines are now covered, resulting in 100% coverage for the file, which means 100% coverage for our one-file project.
 
+<a name="setup_ci"></a>
 ## Set up the CI pipeline
 
 Now that we understand how test coverage works in this project, we'll soon be able to verify the same results through Coveralls.
 
 But first we'll need to set up the CI pipeline.
 
+<a name="setup_ci-add_to_circleci"></a>
 # Add the project to CircleCI
 
 *If you want to follow along, now's a good time to fork the project from this repo and clone it down to your local machine. Once you've done that, you can follow these steps with your own copy*
@@ -245,6 +255,7 @@ You'll receive a prompt asking if you've already added a `./circle/config.yml` f
 
 We haven't, so let's go do that now.
 
+<a name="setup_ci-add_config_yml"></a>
 # Add a `.circleci/config.yml` to the project repo
 
 At the base directory of your project, create a new, empty file called `.circleci/config.yml`.
@@ -277,40 +288,41 @@ workflows:
       - build:
 ```
 
+<p>&nbsp;</p>
 ---
 
-## [WIP]
+## <mark>[WIP]</mark>
 
-# WHAT DO THOSE CONFIG SETTINGS MEAN?
-
----
-
-*
-*
-*
-
-# [DRAFT]
-
-1. We are using CircleCI's v2.1 configuration for pipelines
-2. It includes a simple workflow
-3. And CircleCI's newly provisioned [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby) from the CircleCI Orb Registry
-4. This makes quick work of setting up a new Ruby project
-5. And it even includes a built-in command for running rspec tests, called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test)
-6. Not only does this make it simple to run our rspec test suite, but it also gives us some freebies, including:
-7. Freebie: Automatic Parallelization
-8. Freebie: Default Test Results Directory
-
-#### Why Automatic Parallelization?
-It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.
-
-#### Why a Default Test Results Directory?
-As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.*
+<a name="setup_ci-what_do_settings_mean"></a>
+# <mark>WHAT DO THOSE CONFIG SETTINGS MEAN?</mark>
 
 ---
 
-*
-*
-*
+<mark># [DRAFT]</mark>
+
+<mark>1. We are using CircleCI's v2.1 configuration for pipelines</mark>
+
+<mark>2. It includes a simple workflow</mark>
+
+<mark>3. And CircleCI's newly provisioned [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby) from the CircleCI Orb Registry</mark>
+
+<mark>4. This makes quick work of setting up a new Ruby project</mark>
+
+<mark>5. And it even includes a built-in command for running rspec tests, called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test)</mark>
+
+<mark>6. Not only does this make it simple to run our rspec test suite, but it also gives us some freebies, including:</mark>
+<mark>7. Freebie: Automatic Parallelization</mark>
+
+<mark>8. Freebie: Default Test Results Directory</mark>
+
+#### <mark>Why Automatic Parallelization?</mark>
+<mark>It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.</mark>
+
+#### <mark>Why a Default Test Results Directory?</mark>
+<mark>As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.*</mark>
+
+---
+<p>&nbsp;</p>
 
 Save the file and commit it:
 
@@ -323,6 +335,7 @@ And guess what?
 
 That's it! CircleCI is building your project in its remote CI environment.
 
+<a name="setup_ci-confirm_first_build"></a>
 # Confirm your first build
 
 CircleCI started building your project the moment you pushed that last commit:
@@ -365,6 +378,7 @@ Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LO
 
 That means our tests passed and, therefore, our build succeeded.
 
+<a name="setup_coveralls"></a>
 ## Configure the project to use Coveralls
 
 Now, let's tell CircleCI to start sending test coverage results to Coveralls.
@@ -373,6 +387,7 @@ We're in luck here, since Coveralls has published a [Coveralls Orb](https://circ
 
 But before we can set this up, we'll need to create a new account at [Coveralls](https://coveralls.io/), which is free for individual developers with public (open source) repos.
 
+<a name="setup_coveralls-add_project"></a>
 # Add the project to Coveralls
 
 To add your repo to [Coveralls](https://coveralls.io/sign-in), go to [http://coveralls.io/sign-in](http://coveralls.io/sign-in) and __Sign In__ with GitHub:
@@ -389,38 +404,38 @@ To add your repo, simply click the Toggle control next to your repo name, switch
 
 Great! Coveralls is now tracking your repo.
 
+<a name="setup_coveralls-finish_setup"></a>
 # Finish setup
 
+<p>&nbsp;</p>
 ---
 
-## [WIP]
+<mark>## [WIP]</mark>
 
-# FINISH SETUP AT COVERALLS
+<mark># FINISH SETUP AT COVERALLS</mark>
 
 ---
-
-*
-*
-*
 
 __[DRAFT]__
 
-Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.
+<mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.</mark>
 
-However, we're going to change our approach here in order to leverage some of the new features provided by the Ruby Orb, such as automated parallelization and the default location for storing test results.
+<mark>However, we're going to change our approach here in order to leverage some of the new features provided by the Ruby Orb, such as automated parallelization and the default location for storing test results.</mark>
 
-Doing this prepares us to scale up our project later&mdash;to more tests and potentially more test *suites*&mdash;without requiring further changes.
+<mark>*Note: Both approaches work, but I like this one because it keeps me from having to make changes later.*</mark>
 
-To get these benefits, we'll make just a few changes to our project.
+<mark>Doing this prepares us to scale up our project later&mdash;to more tests and potentially more test *suites*&mdash;without requiring further changes.</mark>
 
-1. First, since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:
+<mark>To get these benefits, we'll make just a few changes to our project.</mark>
+
+<mark>1. First, since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:</mark>
 
 ```ruby
 gem 'simplecov-lcov'
 gem 'rspec_junit_formatter'
 ```
 
-And change the Simplecov configuration in our `spec_helper`:
+<mark>And change the Simplecov configuration in our `spec_helper`:</mark>
 
 ```ruby
 require 'simplecov'
@@ -432,35 +447,32 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 ```
-Now we're exporting test results in XML format.
+<mark>Now we're exporting test results in XML format.</mark>
 
-2. Next, we'll tell Simplecov to save out test results to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:
+<mark>2. Next, we'll tell Simplecov to save out test results to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:</mark>
 
 ```
 Do stuff
 ```
 
-Next, we'll install the Coveralls Orb for CircleCI and tell it where to find our test results:
+<mark>Next, we'll install the Coveralls Orb for CircleCI and tell it where to find our test results:</mark>
 
-1. We'll install the Coveralls Orb by adding it to our `.circelci/config.yml`, like so:
+<mark>1. We'll install the Coveralls Orb by adding it to our `.circelci/config.yml`, like so:</mark>
 
 ```
 Show changes to config.
 ```
 
-2. Then we'll tell coveralls where to find the test results it will upload to the Coveralls API:
+<mark>2. Then we'll tell coveralls where to find the test results it will upload to the Coveralls API:</mark>
 
 ```
 Config
 ```
 
 ---
+<p>&nbsp;</p>
 
-*
-*
-*
-
-
+<a name="setup_coveralls-get_badged"></a>
 # Get badged
 
 Let's add a Coveralls badge to our repo for quick status on our project's test coverage.
@@ -487,9 +499,10 @@ Voilà:
 
 Your repo is badged!
 
+<a name="verify_test_coverage"></a>
 ## Verify test coverage via Coveralls
 
-Since we understand how test coverage works in this project, let's verify those same results through the Coveralls service.
+Since we understand [how test coverage works in this project](#simple_app), let's verify those same results through the Coveralls service.
 
 If you've already configured your project to use Coveralls & CircleCI, then CircleCI has already pushed your first build to Coveralls, and you've noted that coverage stands at 80%:
 
@@ -574,6 +587,7 @@ Which is reinforced by your updated badge:
 
 Bam! Automated test coverage updates—from Coveralls.
 
+<a name="next_steps"></a>
 # Next steps
 
 Now that your project's set up to track test coverage in CI, some of the next things you might want to do include:
