@@ -279,13 +279,17 @@ workflows:
 
 ---
 
-__[WIP]__
+## [WIP]
 
-__WHAT DO THOSE CONFIG SETTINGS MEAN?__
+# WHAT DO THOSE CONFIG SETTINGS MEAN?
 
 ---
 
-__[DRAFT]__
+*
+*
+*
+
+# [DRAFT]
 
 1. We are using CircleCI's v2.1 configuration for pipelines
 2. It includes a simple workflow
@@ -300,9 +304,13 @@ __[DRAFT]__
 It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.
 
 #### Why a Default Test Results Directory?
-As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.
+As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.*
 
 ---
+
+*
+*
+*
 
 Save the file and commit it:
 
@@ -385,17 +393,27 @@ Great! Coveralls is now tracking your repo.
 
 ---
 
-__[WIP]__
+## [WIP]
 
-__FINISH SETUP AT COVERALLS__
+# FINISH SETUP AT COVERALLS
 
 ---
 
+*
+*
+*
+
 __[DRAFT]__
 
-1. Note that the new CircleCI Ruby orb includes the `rspec-test` command, which automates parallel testing and establishes a default test results dir: `/tmp/test-results/rspec`.
+Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.
 
-2. Since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:
+However, we're going to change our approach here in order to leverage some of the new features provided by the Ruby Orb, such as automated parallelization and the default location for storing test results.
+
+Doing this prepares us to scale up our project later&mdash;to more tests and potentially more test *suites*&mdash;without requiring further changes.
+
+To get these benefits, we'll make just a few changes to our project.
+
+1. First, since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:
 
 ```ruby
 gem 'simplecov-lcov'
@@ -414,8 +432,21 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 ```
+Now we're exporting test results in XML format.
+
+2. Next, we'll tell Simplecov to save out test results to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:
+
+```
+Do stuff
+```
+
+3. Finally, what else?
 
 ---
+
+*
+*
+*
 
 
 # Get badged
@@ -447,8 +478,6 @@ Your repo is badged!
 ## Verify test coverage via Coveralls
 
 Since we understand how test coverage works in this project, let's verify those same results through the Coveralls service.
-
-[WIP] *Change tests back to 80% coverage state and push first build to Coveralls.*
 
 If you've already configured your project to use Coveralls & CircleCI, then CircleCI has already pushed your first build to Coveralls, and you've noted that coverage stands at 80%:
 
