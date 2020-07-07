@@ -311,6 +311,7 @@ workflows:
 <mark>5. And it even includes a built-in command for running rspec tests, called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test)</mark>
 
 <mark>6. Not only does this make it simple to run our rspec test suite, but it also gives us some freebies, including:</mark>
+
 <mark>7. Freebie: Automatic Parallelization</mark>
 
 <mark>8. Freebie: Default Test Results Directory</mark>
@@ -319,7 +320,7 @@ workflows:
 <mark>It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.</mark>
 
 #### <mark>Why a Default Test Results Directory?</mark>
-<mark>As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.*</mark>
+<mark>As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.</mark>
 
 ---
 <p>&nbsp;</p>
@@ -420,9 +421,7 @@ __[DRAFT]__
 
 <mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.</mark>
 
-<mark>However, we're going to change our approach here in order to leverage some of the new features provided by the Ruby Orb, such as automated parallelization and the default location for storing test results.</mark>
-
-<mark>*Note: Both approaches work, but I like this one because it keeps me from having to make changes later.*</mark>
+<mark>However, we're going to change our approach here in order to leverage some of the new features provided by CircleCI's Ruby Orb, such as automated parallelization and the default location for storing test results.</mark>
 
 <mark>Doing this prepares us to scale up our project later&mdash;to more tests and potentially more test *suites*&mdash;without requiring further changes.</mark>
 
