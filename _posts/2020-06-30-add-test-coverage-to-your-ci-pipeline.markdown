@@ -8,7 +8,7 @@ categories: CI CD Test Coverage
 <a name="title"></a>
 One of the key indicators of a healthy codebase is test coverage. Once you've bought into the value of CI/CD, it just makes sense to add a test coverage service to track changes to your project's test coverage over time. Not only can it ensure tests increase at the same rate as code, it can also help you control your development workflow with pass/fail checks and PR comments showing where coverage lacks and how to improve it.
 
-In this tutorial we're going to put a simple codebase with test coverage into a CI pipeline at CircleCI, then configure CircleCI to send our project's test coverage results to Coveralls, a popular test coverage service used by some of the world's biggest open source projects.
+In this tutorial we're going to put a simple codebase with test coverage into a CI pipeline at CircleCI, then configure CircleCI to send our project's test coverage results to Coveralls, a popular test coverage service used by some of the world's largest open source projects.
 
 We're going to do this by employing CircleCI's Orb technology, which makes it fast and easy to integrate with third-party tools like Coveralls.
 
@@ -44,7 +44,7 @@ Since this test coverage *report* changes each time we add code to our project, 
 
 ![test coverage in CI/CD]({{ site.url }}/assets/test_coverage_in_ci.png)
 
-1. You push changes to your code at your SCM (GitHub).
+1. You push changes to your code at your SCM (ie. GitHub).
 2. Your CI service builds your project, runs your tests, and generates your test coverage report.
 3. Your CI posts the test coverage report to Coveralls.
 4. Coveralls publishes your coverage changes to a shared workspace.
@@ -223,7 +223,7 @@ But first we'll need to set up the CI pipeline.
 
 *Note: From here forward we'll assume you're starting with a fresh project with no changes to the original. In other words, with test coverage starting at 80%.*
 
-To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) at [https://circleci.com/vcs-authorize/](https://circleci.com/vcs-authorize/) with your GitHub login:
+To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) with your GitHub login:
 
 ![circleci-login.png]({{ site.url }}/assets/circleci-login.png)
 
@@ -235,7 +235,7 @@ Then you'll see the list of GitHub projects for your organization:
 
 ![circleci-org-projects.png]({{ site.url }}/assets/circleci-org-projects.png)
 
-Click Set Up Project next to your newly forked project:
+Click __Set Up Project__ next to your newly forked project:
 
 ![circleci-setup-project-coveralls-demo-ruby.png]({{ site.url }}/assets/circleci-setup-project-coveralls-demo-ruby.png)
 
@@ -291,36 +291,64 @@ workflows:
 <p>&nbsp;</p>
 ---
 
-## <mark>[WIP]</mark>
-
 <a name="setup_ci-what_do_settings_mean"></a>
-# <mark>WHAT DO THOSE CONFIG SETTINGS MEAN?</mark>
+#### What do those config settings mean?
 
----
+It's worth pointing out that we are using v2.1 of CircleCI's configuration spec for pipelines, the latest version, and this is indicated at the top of our file:
 
-<mark># [DRAFT]</mark>
+```ruby
+version: 2.1
+```
 
-<mark>1. We are using CircleCI's v2.1 configuration for pipelines</mark>
+Two of the [core concepts](https://circleci.com/docs/2.0/concepts/#section=getting-started) of the v2.1 config spec are Orbs and Workflows.
 
-<mark>2. It includes a simple workflow</mark>
+[Orbs](https://circleci.com/docs/2.0/using-orbs/) are reusable packages of configuration that can be used across projects for convenience and standardization. Here we're leveraging CircleCI's newly provisioned [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby), which makes quick work of setting up a new Ruby project:
 
-<mark>3. And CircleCI's newly provisioned [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby) from the CircleCI Orb Registry</mark>
+```ruby
+orbs:
+  ruby: circleci/ruby@1.0
+```
 
-<mark>4. This makes quick work of setting up a new Ruby project</mark>
+[Workflows](https://circleci.com/docs/2.0/workflows/) have been around since v2.0 and are simply a means of collecting and orchestrating jobs. Here we've defined a simple workflow called `build_and_test`:
 
-<mark>5. And it even includes a built-in command for running rspec tests, called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test)</mark>
+```ruby
+workflows:
+  version: 2.1
+  build_and_test:
+    jobs:
+      - build:
+```
 
-<mark>6. Not only does this make it simple to run our rspec test suite, but it also gives us some freebies, including:</mark>
+Which invokes a job we've defined, called `build`, that checks out our code, installs our dependencies and runs our tests in the CI environment&mdash;a docker image running Ruby 2.6.5 and Node:
 
-<mark>7. Freebie: Automatic Parallelization</mark>
+```ruby
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.6.5-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - ruby/rspec-test
+```
 
-<mark>8. Freebie: Default Test Results Directory</mark>
+[Jobs](https://circleci.com/docs/2.0/jobs-steps/#section=getting-started), of course, are the main building blocks of your pipeline, which are comprised of [Steps](https://circleci.com/docs/2.0/concepts/#steps) and the commands that do the work of your pipeline.
 
-#### <mark>Why Automatic Parallelization?</mark>
-<mark>It allows to run our test suite, in parallel, for faster speed, which is particularly handy when we're utilizing more than one test suite, such as Cucumber, MiniTest and RSpec.</mark>
+Note that in the final step of our job, we're using a built-in command for running rspec tests that comes with CircleCI's new [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby), called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test):
 
-#### <mark>Why a Default Test Results Directory?</mark>
-<mark>As a convenience, this makes it easy to tell our uploader script where to find our test results in our CI environment, already merged from any parallel runs.</mark>
+```ruby
+steps:
+   [...]
+   - ruby/rspec-test
+```
+
+Not only does this provide a one-liner for running our Rspec tests, it also gives us some freebies, including: automatic parallelization; and a default test results directory.
+
+#### Why automatic parallelization?
+It allows us to run tests from our test suite [in parallel](https://circleci.com/docs/2.0/parallelism-faster-jobs/), without any additional configuration, which improves speed and is particularly handy when we're running a lot of tests.
+
+#### Why a default test results directory?
+As a convenience, this gives us a single place to store our test results in our CI environment, already merged from any parallel runs.
 
 ---
 <p>&nbsp;</p>
