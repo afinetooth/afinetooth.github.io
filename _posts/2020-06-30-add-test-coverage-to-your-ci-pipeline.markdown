@@ -409,7 +409,7 @@ First, let's install the gem in our `Gemfile`:
 ```ruby
 # Gemfile
 [...]
-gem `rspec_junit_formatter`
+gem 'rspec_junit_formatter'
 ```
 
 And run `bundle install`:
@@ -440,11 +440,11 @@ jobs:
 
 To "enable parallelism," we simply add the `parallelism:` key to our `build` job and pass it a value higher than one (1). Four (4) is a common value used in CircleCi docs, so we'll start there.
 
-Now let's push *those" changes.
+Now let's push *those* changes.
 
 ```
 git add .
-git commit -m "Add `rspec_junit_formatter`. Enable parallelism."
+git commit -m "Add 'rspec_junit_formatter'. Enable parallelism."
 git push
 ```
 
