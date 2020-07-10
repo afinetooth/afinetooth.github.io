@@ -382,18 +382,73 @@ Your URL will be different, but should follow this format:
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
 
-<mark>Whoops. That doesn't look right:</mark>
+<mark>So let's check our first build, and&mdash;*Whoops!* That doesn't look right. Our first build has failed:</mark>
 
 ![circleci-first-build-failed.png]({{ site.url }}/assets/circleci-first-build-failed.png)
 
-<mark>Note the error message:</mark>
+Note the error message:
 
 ```
-bundler: failed to load command: rspec (/home/circleci/project/vendor/bundle/ruby/2.6.0/bin/rspec)
+bundler: failed to load command: rspec [...]
 LoadError: cannot load such file -- rspec_junit_formatter
 ```
 
-<mark>The CircleCI Ruby Orb is looking for `rspec_junit_formatter`...</mark>
+The CircleCI Ruby Orb appears to be looking for `rspec_junit_formatter`, which, upon reviewing the [orb docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), makes complete sense:
+
+![circleci-ruby-orb-rspec-test-command-docs.png]({{ site.url }}/assets/circleci-ruby-orb-rspec-test-command-docs.png)
+
+```
+rspec-test
+Test with RSpec. You have to add `gem `spec_junit_formatter`` to your Gemfile. Enable parallelism on CircleCI for faster testing.
+```
+
+Great, let's do those things. We want those benefits (and we want it to work!):
+
+First, let's install the gem in our `Gemfile`:
+
+```ruby
+# Gemfile
+[...]
+gem `rspec_junit_formatter`
+```
+
+And run `bundle install`:
+
+```
+bundle install
+```
+
+Then, let's add a new key and value to our `.circleci/config.yml` to enable parallelism:
+
+```ruby
+#./circleci/config.yml
+
+[...]
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.6.5-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - ruby/rspec-test
+    parallelism: 4
+
+[...]
+```
+
+To "enable parallelism," we simply add the `parallelism:` key to our `build` job and pass it a value higher than one (1). Four (4) is a common value used in CircleCi docs, so we'll start there.
+
+Now let's push *those" changes.
+
+```
+git add .
+git commit -m "Add `rspec_junit_formatter`. Enable parallelism."
+git push
+```
+
+<mark>And now, let's check our build again:</mark>
 
 Your first build should look something like this:
 
