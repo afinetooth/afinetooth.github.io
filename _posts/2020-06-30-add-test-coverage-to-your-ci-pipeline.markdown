@@ -282,10 +282,9 @@ jobs:
       - ruby/rspec-test
 
 workflows:
-  version: 2.1
   build_and_test:
     jobs:
-      - build:
+      - build
 ```
 
 <p>&nbsp;</p>
@@ -313,10 +312,9 @@ orbs:
 
 ```ruby
 workflows:
-  version: 2.1
   build_and_test:
     jobs:
-      - build:
+      - build
 ```
 
 Which invokes a job we've defined, called `build`, that checks out our code, installs our dependencies and runs our tests in the CI environment&mdash;a docker image running Ruby 2.6.5 and Node:
@@ -342,9 +340,9 @@ steps:
    - ruby/rspec-test
 ```
 
-Not only does this provide a one-liner for running our Rspec tests, it also gives us some freebies, including: automatic parallelization; and a default test results directory.
+Not only does this provide a one-liner for running our Rspec tests, it also gives us some freebies, including: automated parallelization; and a default test results directory.
 
-#### Why automatic parallelization?
+#### Why automated parallelization?
 It allows us to run tests from our test suite [in parallel](https://circleci.com/docs/2.0/parallelism-faster-jobs/), without any additional configuration, which improves speed and is particularly handy when we're running a lot of tests.
 
 #### Why a default test results directory?
@@ -383,6 +381,19 @@ Your URL will be different, but should follow this format:
 ```
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
+
+<mark>Whoops. That doesn't look right:</mark>
+
+![circleci-first-build-failed.png]({{ site.url }}/assets/circleci-first-build-failed.png)
+
+<mark>Note the error message:</mark>
+
+```
+bundler: failed to load command: rspec (/home/circleci/project/vendor/bundle/ruby/2.6.0/bin/rspec)
+LoadError: cannot load such file -- rspec_junit_formatter
+```
+
+<mark>The CircleCI Ruby Orb is looking for `rspec_junit_formatter`...</mark>
 
 Your first build should look something like this:
 
@@ -433,36 +444,30 @@ To add your repo, simply click the Toggle control next to your repo name, switch
 
 Great! Coveralls is now tracking your repo.
 
+<p>&nbsp;</p>
+---
+__[DRAFT]__
 <a name="setup_coveralls-finish_setup"></a>
 # Finish setup
 
-<p>&nbsp;</p>
----
-
-<mark>## [WIP]</mark>
-
-<mark># FINISH SETUP AT COVERALLS</mark>
-
----
-
-__[DRAFT]__
-
 <mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.</mark>
 
-<mark>However, we're going to change our approach here in order to leverage some of the new features provided by CircleCI's Ruby Orb, such as automated parallelization and the default location for storing test results.</mark>
+<mark>However, we're going to change our approach here in order to leverage some of the new Ruby Orb's features, such as its `rspec-test` command, which comes with [automated parallelization](#why-automated-parallelization).</mark>
 
-<mark>Doing this prepares us to scale up our project later&mdash;to more tests and potentially more test *suites*&mdash;without requiring further changes.</mark>
+<mark>This is worth doing now since it allows us to scale up our project later&mdash;to many more tests&mdash;without further changes.</mark>
 
-<mark>To get these benefits, we'll make just a few changes to our project.</mark>
+<mark>To get this benefit, we'll make just a few changes to our project.</mark>
 
-<mark>1. First, since the CircleCI Ruby orb expects XML-formatted test results, we'll install the `rspec_junit_formatter` gem in our Gemfile:</mark>
+<mark>First, per the [docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), the Ruby Orb expects XML-formatted test results, which requires us to install the `rspec_junit_formatter` gem in our project's Gemfile:</mark>
 
 ```ruby
 gem 'simplecov-lcov'
 gem 'rspec_junit_formatter'
 ```
 
-<mark>And change the Simplecov configuration in our `spec_helper`:</mark>
+<mark>Second, while we don't need it now, we'll enable parallelism in our CI settings. This tells CircleCI to start running tests in parallel, when it make sense to do so.</mark>
+
+<mark>Next, we'll change the Simplecov configuration in our `spec_helper`:</mark>
 
 ```ruby
 require 'simplecov'
