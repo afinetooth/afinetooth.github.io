@@ -382,29 +382,36 @@ Your URL will be different, but should follow this format:
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
 
-<mark>So let's check our first build, and&mdash;*Whoops!* That doesn't look right. Our first build has failed:</mark>
+<mark>So we check our first build, and&mdash;*Whoops!* That doesn't look right. Our first build has failed:</mark>
 
 ![circleci-first-build-failed.png]({{ site.url }}/assets/circleci-first-build-failed.png)
 
-Note the error message:
+Why? Note the error message:
 
 ```
 bundler: failed to load command: rspec [...]
 LoadError: cannot load such file -- rspec_junit_formatter
 ```
 
-The CircleCI Ruby Orb appears to be looking for `rspec_junit_formatter`, which, upon reviewing the [orb docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), makes complete sense:
+The CircleCI Ruby Orb seems to be looking for `rspec_junit_formatter`, which, upon reviewing the [orb docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), makes complete sense:
 
 ![circleci-ruby-orb-rspec-test-command-docs.png]({{ site.url }}/assets/circleci-ruby-orb-rspec-test-command-docs.png)
 
+Those notes on the `rspec-test` command read:
+
 ```
-rspec-test
-Test with RSpec. You have to add `gem `spec_junit_formatter`` to your Gemfile. Enable parallelism on CircleCI for faster testing.
+You have to add `gem `spec_junit_formatter`` to your Gemfile.
 ```
 
-Great, let's do those things. We want those benefits (and we want it to work!):
+<mark>And:</mark>
 
-First, let's install the gem in our `Gemfile`:
+```
+Enable parallelism on CircleCI for faster testing.
+```
+
+Great, let's do those things. We want those benefits (*and we want it to work!*):
+
+First, let's install the `rspec_junit_formatter` gem in our `Gemfile`:
 
 ```ruby
 # Gemfile
@@ -418,7 +425,7 @@ And run `bundle install`:
 bundle install
 ```
 
-Then, let's add a new key and value to our `.circleci/config.yml` to enable parallelism:
+<mark>Then, let's add a new key and value to our `.circleci/config.yml`:</mark>
 
 ```ruby
 #./circleci/config.yml
@@ -438,9 +445,9 @@ jobs:
 [...]
 ```
 
-To "enable parallelism," we simply add the `parallelism:` key to our `build` job and pass it a value higher than one (1). Four (4) is a common value used in CircleCi docs, so we'll start there.
+<mark>To "enable parallelism,"" we simply add the `parallelism:` key to our job called `build` and pass it a value higher than one (1). Four (4) is a common value used in CircleCI docs, so we'll start there.</mark>
 
-Now let's push *those* changes.
+<mark>Now let's push *those* changes.</mark>
 
 ```
 git add .
@@ -448,35 +455,49 @@ git commit -m "Add 'rspec_junit_formatter'. Enable parallelism."
 git push
 ```
 
-<mark>And now, let's check our build again:</mark>
-
-Your first build should look something like this:
+And check our build again... and&mdash;*Great!* A successful build:
 
 ![circleci-first-build-success.png]({{ site.url }}/assets/circleci-first-build-success.png)
 
-A successful build&mdash;albeit, without much going on.
-
-Notice those test results, which look the same as on our local machine:
+Notice those test results, which look much like [those on our local machine](#run-tests):
 
 ```ruby
-bundle exec rspec
+[...]
+bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
 
-ClassOne
-  covered
-    returns 'covered'
+[...]
 
-Finished in 0.00127 seconds (files took 0.11459 seconds to load)
+  ClassOne covered returns 'covered'
+    0.00042 seconds ./spec/class_one_spec.rb:7
+
+Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 1 example, 0 failures
 
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-That means our tests passed and, therefore, our build succeeded.
+<mark>The only difference being that the Ruby Orb's `rspec-test` command is sending a bunch of parameters along with the `bundle exec rspec` command, telling it how to format its results and where to store them.</mark>
+
+<mark>And check out that nifty parallelism report:</mark>
+
+![circleci-first-build-success-parallelism.png]({{ site.url }}/assets/circleci-first-build-success-parallelism.png)
+
+<mark>Four (4) successful jobs, run in parallel, with tests split by timing, each with its own results. Probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1) in our config, but for now it's not hurting anything so we'll leave it that way.</mark>
+
+<mark>Finally:</mark>
+
+```ruby
+Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
+```
+
+<mark>Simplecov is generating a coverage report and storing it in the `/coverage` directory.</mark>
+
+<mark>We now have test coverage in CI.</mark>
 
 <a name="setup_coveralls"></a>
 ## Configure the project to use Coveralls
 
-Now, let's tell CircleCI to start sending test coverage results to Coveralls.
+Now, let's tell CircleCI to start sending those test coverage results to Coveralls.
 
 We're in luck here, since Coveralls has published a [Coveralls Orb](https://circleci.com/orbs/registry/orb/coveralls/coveralls) following the [CircleCI Orb standard](https://circleci.com/docs/2.0/orb-intro/), which makes this plug-and-play.
 
@@ -501,11 +522,11 @@ Great! Coveralls is now tracking your repo.
 
 <p>&nbsp;</p>
 ---
-__[DRAFT]__
+__[WIP - DRAFT]__
 <a name="setup_coveralls-finish_setup"></a>
 # Finish setup
 
-<mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project for Coveralls would be to install the Coveralls rubygem to our project, which takes care of uploading test results to Coveralls.</mark>
+<mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project to use Coveralls would be to install the Coveralls rubygem, which takes care of uploading test results to Coveralls.</mark>
 
 <mark>However, we're going to change our approach here in order to leverage some of the new Ruby Orb's features, such as its `rspec-test` command, which comes with [automated parallelization](#why-automated-parallelization).</mark>
 
