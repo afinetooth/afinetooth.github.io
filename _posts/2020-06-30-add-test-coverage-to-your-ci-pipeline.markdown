@@ -488,7 +488,7 @@ A successful build:
 
 ![circleci-first-build-success.png]({{ site.url }}/assets/circleci-first-build-success.png)
 
-Notice those test results, which look much like the one we got from [running on our local machine](#run-tests):
+Notice those test results, which look much like the ones we got from [running on our local machine](#run-tests):
 
 ```ruby
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
@@ -515,7 +515,7 @@ bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tm
 
 <mark>Four (4) out of four (4) parallel runs, with tests split by timing, each with its own results.</mark><sup>*</sup>
 
-<sup>*</sup> *<mark>That's probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1), but for now it's not hurting anything so we'll leave it that way.</mark>*
+<sup>*</sup> *<mark>That's probably overkill for a one file project. And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1), but for now it's not hurting anything so we'll leave it that way.</mark>*
 
 <mark>Finally:</mark>
 
@@ -788,3 +788,19 @@ Now that your project's set up to track test coverage in CI, some of the next th
 2. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
 
 Start with the Coveralls docs here.
+
+<p>&nbsp;</p>
+---
+<mark>NOT PART OF TUTORIAL</mark>
+<a name="next_steps"></a>
+# To Do
+
+<mark>1. Include adding COVERALLS_REPO_TOKEN to CI env vars.</mark>
+
+<mark>2. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
+
+<mark>3. Resolve question of whether/how to leverage Ruby Orbs default test-results directory.</mark>
+
+<mark>4. Remove yellow sections.</mark>
+
+<mark>5. Add remaining images.</mark>
