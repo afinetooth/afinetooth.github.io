@@ -311,7 +311,7 @@ workflows:
 <a name="setup_ci-what_do_settings_mean"></a>
 #### What do those config settings mean?
 
-It's worth pointing out that we are using v2.1 of CircleCI's configuration spec for pipelines, the latest version, and this is indicated at the top of our file:
+It's worth pointing out that we're using v2.1 of CircleCI's configuration spec for pipelines, the latest version, and this is indicated at the top of our file:
 
 ```ruby
 version: 2.1
@@ -403,7 +403,7 @@ Your URL will be different, but should follow this format:
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
 
-So we're checking our first build, and&mdash;*Whoops!* That doesn't look right...
+So we're checking our first build, and&mdash;*Whoops!* That doesn't look right&mdash;
 
 Our first build has failed:
 
@@ -480,13 +480,15 @@ git commit -m "Add 'rspec_junit_formatter'. Enable parallelism."
 git push
 ```
 
-And check our build again... and&mdash;*Great!*
+<p>&nbsp;</p>
+
+Let's check our build again... and&mdash;*Great!*
 
 A successful build:
 
 ![circleci-first-build-success.png]({{ site.url }}/assets/circleci-first-build-success.png)
 
-Notice those test results, which look much like [those on our local machine](#run-tests):
+Notice those test results, which look much like the one we got from [running on our local machine](#run-tests):
 
 ```ruby
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
@@ -501,7 +503,7 @@ Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-The only difference being that, before that output, the Ruby Orb's `rspec-test` command is calling the `bundle exec rspec` command with a number of additional parameters, telling RSpec how to format its results and where to store them:
+The only difference being that, before that output, the Ruby Orb's `rspec-test` command is calling `bundle exec rspec` with a number of additional parameters, telling RSpec how to format its results and where to store them:
 
 ```ruby
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
@@ -511,7 +513,9 @@ bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tm
 
 ![circleci-first-build-success-parallelism.png]({{ site.url }}/assets/circleci-first-build-success-parallelism.png)
 
-<mark>Four (4) out of four (4) parallel runs, with tests split by timing, each with its own results. *Probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1) in our config, but for now it's not hurting anything so we'll leave it that way.*</mark>
+<mark>Four (4) out of four (4) parallel runs, with tests split by timing, each with its own results.</mark><sup>*</sup>
+
+<sup>*</sup> *<mark>That's probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1), but for now it's not hurting anything so we'll leave it that way.</mark>*
 
 <mark>Finally:</mark>
 
@@ -601,7 +605,7 @@ end
 ```
 Here we require `simplecov-lcov` and tell Simplecov to do two things:
 
-Combine multi-file reports into a single file:
+<mark>Combine multiple report files into a single file:</mark>
 
 ```ruby
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
@@ -618,6 +622,8 @@ SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
 ```
 Do stuff
 ```
+
+<p>&nbsp;</p>
 
 As our final step, we'll add the Coveralls Orb to the `orbs` section of our `.circelci/config.yml`:
 
@@ -654,7 +660,7 @@ jobs:
 [...]
 ```
 
-<mark>And then, in keeping with CircleCI's "coding is configuration" mantra, right below the `coveralls/upload` command we'll add the `path_to_lcov` parameter provided by the Coveralls Orb, to let it know where to grab the coverage report it should upload to Coveralls:</mark>
+<mark>Then we'll add the `path_to_lcov` parameter provided by the Coveralls Orb, to tell the `coveralls/upload` command where to find the coverage report it should upload to Coveralls:</mark>
 
 ```ruby
 # /circleci/config.yml
@@ -666,36 +672,13 @@ jobs:
 [...]
 ```
 
-<p>&nbsp;</p>
+Now push those changes:
 
-<a name="setup_coveralls-get_badged"></a>
-# Get badged
-
-<mark>Potentially, move this section right after __Verify test coverage via Coveralls__, right before the sentence, "Which is reinforced by your updated badge:"</mark>
-
-Let's add a Coveralls badge to our repo for quick status on our project's test coverage.
-
-At the bottom of your Coveralls start page:
-
-![coveralls-first-coverage-report.png]({{ site.url }}/assets/coveralls-first-coverage-report.png)
-
-You'll see a box like this instructing you to badge your repo:
-
-![coveralls-badge-your-repo.png]({{ site.url }}/assets/coveralls-badge-your-repo.png)
-
-Click the __Embed__ button and choose the version of markup that applies for you:
-
-![coveralls-badge-your-repo-choose-embed-markup.png]({{ site.url }}/assets/coveralls-badge-your-repo-choose-embed-markup.png)
-
-(For a GitHub README, that's the Markdown version.)
-
-Then paste the markup into the top of your README, and...
-
-Voilà:
-
-![coveralls-badge-80-percent.png]({{ site.url }}/assets/coveralls-badge-80-percent.png)
-
-Your repo is badged!
+```
+git add .
+git commit -m "Finish coveralls setup."
+git push
+```
 
 <p>&nbsp;</p>
 
@@ -704,15 +687,25 @@ Your repo is badged!
 
 Since we understand [how test coverage works in this project](#simple_app), let's verify those same results through the Coveralls service.
 
-If you've already configured your project to use Coveralls & CircleCI, then CircleCI has already pushed your first build to Coveralls, and you've noted that coverage stands at 80%:
+Given that we've configured our project to use CircleCI and Coveralls, and pushed those changes to our repo, then that last push triggered a new build at CircleCI:
+
+<mark>[IMAGE] New build at CircleCI</mark>
+
+Which in turn pushed test results to the Coveralls API:
+
+```
+CI output showing results pushed to Coveralls API
+```
+
+And triggered a new build at Coveralls:
 
 ![coveralls-first-build-80-percent.png]({{ site.url }}/assets/coveralls-first-build-80-percent.png)
 
-The badge on your repo reinforces that:
+Which shows coverage at 80%.
 
-![coveralls-badge-80-percent.png]({{ site.url }}/assets/coveralls-badge-80-percent.png)
+Which is what we expected.
 
-Now let's validate that Coveralls is tracking changes in test coverage on our project.
+Now, let's validate that Coveralls is tracking *changes* in test coverage for our project.
 
 To do that, let's re-add that test that lifts coverage to 100%.
 
@@ -771,7 +764,7 @@ git push
 
 That push will trigger a new build at CircleCI:
 
-[IMAGE] *New build at CircleCI*
+<mark>[IMAGE] *New build at CircleCI*</mark>
 
 Which in turn triggers a new build at Coveralls:
 
@@ -780,10 +773,6 @@ Which in turn triggers a new build at Coveralls:
 Which now reads 100%:
 
 ![coveralls-new-build-100-percent-zoomed.png]({{ site.url }}/assets/coveralls-new-build-100-percent-zoomed.png)
-
-Which is reinforced by your updated badge:
-
-![coveralls-badge-100-percent.png]({{ site.url }}/assets/coveralls-badge-100-percent.png)
 
 Bam! Automated test coverage updates—from Coveralls.
 
@@ -794,8 +783,8 @@ Bam! Automated test coverage updates—from Coveralls.
 
 Now that your project's set up to track test coverage in CI, some of the next things you might want to do include:
 
-1. Configure PR comments
-2. Set up pass/fail checks
-3. Explore more complex scenarios, like multiple test suites and parallel builds
+1. __Get badged__ - Add a nifty badge to your repo's README.
+2. __Configure PR comments__ - Inform collaborators of changes to test coverage to consider before merging.
+2. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
 
 Start with the Coveralls docs here.
