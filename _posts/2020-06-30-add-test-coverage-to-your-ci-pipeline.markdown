@@ -12,6 +12,8 @@ In this tutorial we're going to put a simple codebase with test coverage into a 
 
 We're going to do this by employing CircleCI's Orb technology, which makes it fast and easy to integrate with third-party tools like Coveralls.
 
+<p>&nbsp;</p>
+
 <a name="prerequisites"></a>
 ## Prerequisites
 
@@ -22,6 +24,8 @@ To follow along with this post, you'll need the following:
 - A CircleCI account
 
 Note: *We'll create a free Coveralls account along the way.*
+
+<p>&nbsp;</p>
 
 <a name="basic_concepts"></a>
 ## Basic Concepts
@@ -39,6 +43,8 @@ On each run of your project's test suite, the test coverage *library* generates 
 
 Since this test coverage *report* changes each time we add code to our project, the *report* is what we send to a service like Coveralls, which compares it to previous reports and tracks how our test coverage changes over time.
 
+<p>&nbsp;</p>
+
 <a name="basic_concepts-how_it_works_in_ci"></a>
 # How it works in CI/CD
 
@@ -49,6 +55,8 @@ Since this test coverage *report* changes each time we add code to our project, 
 3. Your CI posts the test coverage report to Coveralls.
 4. Coveralls publishes your coverage changes to a shared workspace.
 5. (Optionally) Coveralls sends comments and pass/fail checks to your PRs to control your development workflow.
+
+<p>&nbsp;</p>
 
 <a name="simple_app"></a>
 ## A Simple App&mdash;with Test Coverage
@@ -119,6 +127,8 @@ SimpleCov.start do
 end
 ```
 
+<p>&nbsp;</p>
+
 <a name="simple_app-run_tests"></a>
 # Run tests
 
@@ -161,7 +171,9 @@ Clicking on `lib/class_one.rb` brings up results for the file:
 
 Where you'll notice covered lines in green, and uncovered lines in red.
 
-In our case, 4/5 lines are covered, indicating 80% coverage.
+In our case, 4/5 lines are covered, translating to 80% coverage.
+
+<p>&nbsp;</p>
 
 <a name="simple_app-add_tests"></a>
 # Add tests and see coverage change
@@ -209,6 +221,8 @@ And now, if we click on `lib/class_one.rb` we see:
 
 Five (5) out of five (5) relevant lines are now covered, resulting in 100% coverage for the file, which means 100% coverage for our one-file project.
 
+<p>&nbsp;</p>
+
 <a name="setup_ci"></a>
 ## Set up the CI pipeline
 
@@ -216,12 +230,14 @@ Now that we understand how test coverage works in this project, we'll soon be ab
 
 But first we'll need to set up the CI pipeline.
 
+<p>&nbsp;</p>
+
 <a name="setup_ci-add_to_circleci"></a>
 # Add the project to CircleCI
 
 *If you want to follow along, now's a good time to fork the project from this repo and clone it down to your local machine. Once you've done that, you can follow these steps with your own copy*
 
-*Note: From here forward we'll assume you're starting with a fresh project with no changes to the original. In other words, with test coverage starting at 80%.*
+*Note: From here on we'll assume you're starting with a fresh project with no changes to the original. In other words, with test coverage starting at 80%.*
 
 To add a new public repo to [CircleCI](http://circleci.com/), [Log in](https://circleci.com/vcs-authorize/) with your GitHub login:
 
@@ -254,6 +270,8 @@ You'll receive a prompt asking if you've already added a `./circle/config.yml` f
 ![circleci-start-project-add-config-manually.png]({{ site.url }}/assets/circleci-start-project-add-config-manually.png)
 
 We haven't, so let's go do that now.
+
+<p>&nbsp;</p>
 
 <a name="setup_ci-add_config_yml"></a>
 # Add a `.circleci/config.yml` to the project repo
@@ -351,16 +369,19 @@ As a convenience, this gives us a single place to store our test results in our 
 ---
 <p>&nbsp;</p>
 
-Save the file and commit it:
+Save the file, commit it and push:
 
 ```
 git add .
 git commit -m "Add .circleci/config.yml."
+git push -u origin master
 ```
 
 And guess what?
 
 That's it! CircleCI is building your project in its remote CI environment.
+
+<p>&nbsp;</p>
 
 <a name="setup_ci-confirm_first_build"></a>
 # Confirm your first build
@@ -382,11 +403,15 @@ Your URL will be different, but should follow this format:
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
 
-<mark>So we check our first build, and&mdash;*Whoops!* That doesn't look right. Our first build has failed:</mark>
+So we're checking our first build, and&mdash;*Whoops!* That doesn't look right...
+
+Our first build has failed:
 
 ![circleci-first-build-failed.png]({{ site.url }}/assets/circleci-first-build-failed.png)
 
-Why? Note the error message:
+*Why?*
+
+Note the error message:
 
 ```
 bundler: failed to load command: rspec [...]
@@ -397,7 +422,7 @@ The CircleCI Ruby Orb seems to be looking for `rspec_junit_formatter`, which, up
 
 ![circleci-ruby-orb-rspec-test-command-docs.png]({{ site.url }}/assets/circleci-ruby-orb-rspec-test-command-docs.png)
 
-Those notes on the `rspec-test` command read:
+The notes on the `rspec-test` command read:
 
 ```
 You have to add `gem `spec_junit_formatter`` to your Gemfile.
@@ -409,7 +434,7 @@ You have to add `gem `spec_junit_formatter`` to your Gemfile.
 Enable parallelism on CircleCI for faster testing.
 ```
 
-Great, let's do those things. We want those benefits (*and we want it to work!*):
+<mark>Great, let's do those things. We want those benefits (*and we want it to work!*):</mark>
 
 First, let's install the `rspec_junit_formatter` gem in our `Gemfile`:
 
@@ -455,16 +480,16 @@ git commit -m "Add 'rspec_junit_formatter'. Enable parallelism."
 git push
 ```
 
-And check our build again... and&mdash;*Great!* A successful build:
+And check our build again... and&mdash;*Great!*
+
+A successful build:
 
 ![circleci-first-build-success.png]({{ site.url }}/assets/circleci-first-build-success.png)
 
 Notice those test results, which look much like [those on our local machine](#run-tests):
 
 ```ruby
-[...]
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
-
 [...]
 
   ClassOne covered returns 'covered'
@@ -476,13 +501,17 @@ Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-<mark>The only difference being that the Ruby Orb's `rspec-test` command is sending a bunch of parameters along with the `bundle exec rspec` command, telling it how to format its results and where to store them.</mark>
+The only difference being that, before that output, the Ruby Orb's `rspec-test` command is calling the `bundle exec rspec` command with a number of additional parameters, telling RSpec how to format its results and where to store them:
+
+```ruby
+bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
+```
 
 <mark>And check out that nifty parallelism report:</mark>
 
 ![circleci-first-build-success-parallelism.png]({{ site.url }}/assets/circleci-first-build-success-parallelism.png)
 
-<mark>Four (4) successful jobs, run in parallel, with tests split by timing, each with its own results. Probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1) in our config, but for now it's not hurting anything so we'll leave it that way.</mark>
+<mark>Four (4) out of four (4) parallel runs, with tests split by timing, each with its own results. *Probably overkill for a one file project! And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1) in our config, but for now it's not hurting anything so we'll leave it that way.*</mark>
 
 <mark>Finally:</mark>
 
@@ -490,9 +519,11 @@ Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LO
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-<mark>Simplecov is generating a coverage report and storing it in the `/coverage` directory.</mark>
+Simplecov is generating a coverage report and storing it in the `/coverage` directory.
 
-<mark>We now have test coverage in CI.</mark>
+We now have test coverage in CI.
+
+<p>&nbsp;</p>
 
 <a name="setup_coveralls"></a>
 ## Configure the project to use Coveralls
@@ -502,6 +533,8 @@ Now, let's tell CircleCI to start sending those test coverage results to Coveral
 We're in luck here, since Coveralls has published a [Coveralls Orb](https://circleci.com/orbs/registry/orb/coveralls/coveralls) following the [CircleCI Orb standard](https://circleci.com/docs/2.0/orb-intro/), which makes this plug-and-play.
 
 But before we can set this up, we'll need to create a new account at [Coveralls](https://coveralls.io/), which is free for individual developers with public (open source) repos.
+
+<p>&nbsp;</p>
 
 <a name="setup_coveralls-add_project"></a>
 # Add the project to Coveralls
@@ -521,31 +554,42 @@ To add your repo, simply click the Toggle control next to your repo name, switch
 Great! Coveralls is now tracking your repo.
 
 <p>&nbsp;</p>
----
-__[WIP - DRAFT]__
+
 <a name="setup_coveralls-finish_setup"></a>
 # Finish setup
 
-<mark>Prior to the release of CircleCI's new Ruby Orb, the normal approach to setting up a Ruby project to use Coveralls would be to install the Coveralls rubygem, which takes care of uploading test results to Coveralls.</mark>
+Prior to the release of the Coveralls Orb, the default approach to setting up a Ruby project to use Coveralls would be to install the Coveralls rubygem, which leverages Simplecov as its main dependency and takes care of uploading Simplecov's results to Coveralls.
 
-<mark>However, we're going to change our approach here in order to leverage some of the new Ruby Orb's features, such as its `rspec-test` command, which comes with [automated parallelization](#why-automated-parallelization).</mark>
+However, to stick with the v2.1 config at CircleCI, and to leverage the benefits of CircleCI's new Ruby Orb, we'll set up the Coveralls Orb to work with the Ruby Orb.
 
-<mark>This is worth doing now since it allows us to scale up our project later&mdash;to many more tests&mdash;without further changes.</mark>
-
-<mark>To get this benefit, we'll make just a few changes to our project.</mark>
-
-<mark>First, per the [docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), the Ruby Orb expects XML-formatted test results, which requires us to install the `rspec_junit_formatter` gem in our project's Gemfile:</mark>
+Now the first consideration, which is a little counter-intuitive, is that the Coveralls Orb is written in Javascript, rather than Ruby, with a dependency of Node; but this is no matter since, if you recall, we configured the Ruby Orb to install a docker image containing both Ruby *and* Node:
 
 ```ruby
-gem 'simplecov-lcov'
-gem 'rspec_junit_formatter'
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.6.5-node
+    steps:
+      [...]
 ```
 
-<mark>Second, while we don't need it now, we'll enable parallelism in our CI settings. This tells CircleCI to start running tests in parallel, when it make sense to do so.</mark>
+So no changes to make there.
 
-<mark>Next, we'll change the Simplecov configuration in our `spec_helper`:</mark>
+However, another requirement of the Coveralls Orb is that it expects test coverage reports in LCOV format. So to meet that requirement, we'll make a few more changes to our project.
+
+First, we'll add the `simplecov-lcov` gem to our `Gemfile`:
 
 ```ruby
+# Gemfile
+[...]
+gem 'rspec_junit_formatter'
+gem 'simplecov-lcov'
+```
+
+Second, we'll change some Simplecov-related configuration in our `spec_helper`:
+
+```ruby
+# spec_helper.rb
 require 'simplecov'
 require 'simplecov-lcov'
 
@@ -555,33 +599,79 @@ SimpleCov.start do
   add_filter "/spec/"
 end
 ```
-<mark>Now we're exporting test results in XML format.</mark>
+Here we require `simplecov-lcov` and tell Simplecov to do two things:
 
-<mark>2. Next, we'll tell Simplecov to save out test results to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:</mark>
+Combine multi-file reports into a single file:
+
+```ruby
+SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
+```
+
+And export results in LCOV format:
+
+```ruby
+SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
+```
+
+<mark>Next, we'll tell Simplecov to save its report file to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:</mark>
 
 ```
 Do stuff
 ```
 
-<mark>Next, we'll install the Coveralls Orb for CircleCI and tell it where to find our test results:</mark>
+As our final step, we'll add the Coveralls Orb to the `orbs` section of our `.circelci/config.yml`:
 
-<mark>1. We'll install the Coveralls Orb by adding it to our `.circelci/config.yml`, like so:</mark>
+```ruby
+# .circleci/config.yml
+version: 2.1
 
+orbs:
+  ruby: circleci/ruby@1.0
+  coveralls: coveralls/coveralls@1.0.4
+
+[...]
 ```
-Show changes to config.
+
+And in the `jobs` section, we'll add a step to our `build` job to call the Coveralls Orb's `upload` command:
+
+```ruby
+# /circleci/config.yml
+[...]
+orbs:
+  ruby: circleci/ruby@1.0
+  coveralls: coveralls/coveralls@1.0.4
+
+jobs:
+  build:
+    docker:
+      - image: cimg/ruby:2.6.5-node
+    steps:
+      - checkout
+      - ruby/install-deps
+      - ruby/rspec-test
+      - coveralls/upload:
+
+[...]
 ```
 
-<mark>2. Then we'll tell coveralls where to find the test results it will upload to the Coveralls API:</mark>
+<mark>And then, in keeping with CircleCI's "coding is configuration" mantra, right below the `coveralls/upload` command we'll add the `path_to_lcov` parameter provided by the Coveralls Orb, to let it know where to grab the coverage report it should upload to Coveralls:</mark>
 
-```
-Config
+```ruby
+# /circleci/config.yml
+[...]
+      - ruby/rspec-test
+      - coveralls/upload:
+          path_to_lcov: ./coverage/lcov/project.lcov
+
+[...]
 ```
 
----
 <p>&nbsp;</p>
 
 <a name="setup_coveralls-get_badged"></a>
 # Get badged
+
+<mark>Potentially, move this section right after __Verify test coverage via Coveralls__, right before the sentence, "Which is reinforced by your updated badge:"</mark>
 
 Let's add a Coveralls badge to our repo for quick status on our project's test coverage.
 
@@ -606,6 +696,8 @@ Voilà:
 ![coveralls-badge-80-percent.png]({{ site.url }}/assets/coveralls-badge-80-percent.png)
 
 Your repo is badged!
+
+<p>&nbsp;</p>
 
 <a name="verify_test_coverage"></a>
 ## Verify test coverage via Coveralls
@@ -694,6 +786,8 @@ Which is reinforced by your updated badge:
 ![coveralls-badge-100-percent.png]({{ site.url }}/assets/coveralls-badge-100-percent.png)
 
 Bam! Automated test coverage updates—from Coveralls.
+
+<p>&nbsp;</p>
 
 <a name="next_steps"></a>
 # Next steps
