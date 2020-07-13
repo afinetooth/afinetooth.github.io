@@ -795,12 +795,14 @@ Start with the Coveralls docs here.
 <a name="next_steps"></a>
 # To Do
 
-<mark>1. Include adding COVERALLS_REPO_TOKEN to CI env vars.</mark>
+<mark>1. Resolve whether to explore parallelism. Leaning toward not.</mark>
 
-<mark>2. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
+<mark>2. Resolve whether/how to leverage the Ruby Orb's default test-results directory for test coverage results.</mark>
 
-<mark>3. Resolve question of whether/how to leverage Ruby Orbs default test-results directory.</mark>
+<mark>3. In Finish Setup, include adding COVERALLS_REPO_TOKEN to CI env vars.</mark>
 
-<mark>4. Remove yellow sections.</mark>
+<mark>4. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
 
-<mark>5. Add remaining images.</mark>
+<mark>5. Remove yellow sections.</mark>
+
+<mark>6. Add remaining images.</mark>
