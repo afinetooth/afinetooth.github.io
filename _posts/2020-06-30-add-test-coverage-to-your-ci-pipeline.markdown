@@ -463,7 +463,6 @@ A successful build:
 Notice those test results, which look much like the ones we got from [running on our local machine](#run-tests):
 
 ```ruby
-bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
 [...]
 
 ClassOne covered returns 'covered'
@@ -475,7 +474,7 @@ Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-And just like in local, Simplecov is generating a coverage report and storing it in the `/coverage` directory:
+And just like in our local environment, Simplecov is generating a coverage report and storing it in the `/coverage` directory:
 
 ```ruby
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
