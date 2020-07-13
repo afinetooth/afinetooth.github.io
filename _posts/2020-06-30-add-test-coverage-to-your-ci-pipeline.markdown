@@ -35,7 +35,7 @@ Note: *We'll create a free Coveralls account along the way.*
 
 If you're new to test *coverage*, here's how it works:
 
-For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being covered by its tests. (*In the case of our Ruby project, we'll use a library called Simplecov, which comes packaged as a Rubygem.*)
+For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being covered by its tests. (*In the case of our Ruby project, we're using a test coverage library called Simplecov.*)
 
 On each run of your project's test suite, the test coverage *library* generates a test coverage *report*, like so:
 
