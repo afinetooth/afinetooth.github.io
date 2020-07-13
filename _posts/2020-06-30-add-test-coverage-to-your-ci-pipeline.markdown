@@ -428,15 +428,9 @@ The notes on the `rspec-test` command read:
 You have to add `gem `spec_junit_formatter`` to your Gemfile.
 ```
 
-<mark>And:</mark>
+So let's do just that.
 
-```
-Enable parallelism on CircleCI for faster testing.
-```
-
-<mark>Great, let's do those things. We want those benefits (*and we want it to work!*):</mark>
-
-First, let's install the `rspec_junit_formatter` gem in our `Gemfile`:
+Install the `rspec_junit_formatter` gem in your `Gemfile`:
 
 ```ruby
 # Gemfile
@@ -444,45 +438,23 @@ First, let's install the `rspec_junit_formatter` gem in our `Gemfile`:
 gem 'rspec_junit_formatter'
 ```
 
-And run `bundle install`:
+Run `bundle install`:
 
 ```
 bundle install
 ```
 
-<mark>Then, let's add a new key and value to our `.circleci/config.yml`:</mark>
-
-```ruby
-#./circleci/config.yml
-
-[...]
-
-jobs:
-  build:
-    docker:
-      - image: cimg/ruby:2.6.5-node
-    steps:
-      - checkout
-      - ruby/install-deps
-      - ruby/rspec-test
-    parallelism: 4
-
-[...]
-```
-
-<mark>To "enable parallelism,"" we simply add the `parallelism:` key to our job called `build` and pass it a value higher than one (1). Four (4) is a common value used in CircleCI docs, so we'll start there.</mark>
-
-<mark>Now let's push *those* changes.</mark>
+Push the change:
 
 ```
 git add .
-git commit -m "Add 'rspec_junit_formatter'. Enable parallelism."
+git commit -m "Add 'rspec_junit_formatter'."
 git push
 ```
 
 <p>&nbsp;</p>
 
-Let's check our build again... and&mdash;*Great!*
+Then check our build again... and&mdash;*great!*
 
 A successful build:
 
@@ -503,27 +475,11 @@ Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-The only difference being that, before the results, the Ruby Orb's `rspec-test` command is calling `bundle exec rspec` with a number of additional parameters, telling RSpec how to format its results and where to store them:
-
-```ruby
-bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
-```
-
-<mark>And check out that nifty parallelism report:</mark>
-
-![circleci-first-build-success-parallelism.png]({{ site.url }}/assets/circleci-first-build-success-parallelism.png)
-
-<mark>Four (4) out of four (4) parallel runs, with tests split by timing, each with its own results.</mark><sup>*</sup>
-
-<sup>*</sup> *<mark>That's probably overkill for a one file project. And I'm curious how our one test got split across four (4) jobs. We could certainly change `parallelism:` back to one (1), but for now it's not hurting anything so we'll leave it that way.</mark>*
-
-<mark>Finally:</mark>
+And just like in local, Simplecov is generating a coverage report and storing it in the `/coverage` directory:
 
 ```ruby
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
-
-Simplecov is generating a coverage report and storing it in the `/coverage` directory.
 
 We now have test coverage in CI.
 
@@ -577,8 +533,6 @@ jobs:
       [...]
 ```
 
-So no changes to make there.
-
 However, another requirement of the Coveralls Orb is that it expects test coverage reports in LCOV format. So to meet that requirement, we'll make a few more changes to our project.
 
 First, we'll add the `simplecov-lcov` gem to our `Gemfile`:
@@ -605,7 +559,7 @@ end
 ```
 Here we require `simplecov-lcov` and tell Simplecov to do two things:
 
-<mark>Combine multiple report files into a single file:</mark>
+Combine multiple report files into a single file:
 
 ```ruby
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
@@ -615,12 +569,6 @@ And export results in LCOV format:
 
 ```ruby
 SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
-```
-
-<mark>Next, we'll tell Simplecov to save its report file to the default test results directory provided by the CircleCI Ruby Orb, `/tmp/test-results/rspec`:</mark>
-
-```
-Do stuff
 ```
 
 <p>&nbsp;</p>
@@ -638,7 +586,7 @@ orbs:
 [...]
 ```
 
-And in the `jobs` section, we'll add a step to our `build` job to call the Coveralls Orb's `upload` command:
+And in the `jobs` section, we'll add a step to our `build` job to call the Coveralls Orb's `upload` command, including the `path_to_lcov` parameter, which tells `coveralls/upload` where to find the coverage report it should upload to the Coveralls API:
 
 ```ruby
 # /circleci/config.yml
@@ -654,17 +602,6 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
-      - ruby/rspec-test
-      - coveralls/upload:
-
-[...]
-```
-
-<mark>Then we'll add the `path_to_lcov` parameter provided by the Coveralls Orb, to tell the `coveralls/upload` command where to find the coverage report it should upload to Coveralls:</mark>
-
-```ruby
-# /circleci/config.yml
-[...]
       - ruby/rspec-test
       - coveralls/upload:
           path_to_lcov: ./coverage/lcov/project.lcov
@@ -689,7 +626,7 @@ Since we understand [how test coverage works in this project](#simple_app), let'
 
 Given that we've configured our project to use CircleCI and Coveralls, and pushed those changes to our repo, then that last push triggered a new build at CircleCI:
 
-<mark>[IMAGE] New build at CircleCI</mark>
+<mark>[IMAGE] New build at CircleCI (80%)</mark>
 
 Which in turn pushed test results to the Coveralls API:
 
@@ -764,7 +701,7 @@ git push
 
 That push will trigger a new build at CircleCI:
 
-<mark>[IMAGE] *New build at CircleCI*</mark>
+<mark>[IMAGE] New build at CircleCI (100%)</mark>
 
 Which in turn triggers a new build at Coveralls:
 
@@ -783,11 +720,11 @@ Bam! Automated test coverage updates—from Coveralls.
 
 Now that your project's set up to track test coverage in CI, some of the next things you might want to do include:
 
-1. __Get badged__ - Add a nifty badge to your repo's README.
-2. __Configure PR comments__ - Inform collaborators of changes to test coverage to consider before merging.
-3. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
+<mark>1. __Get badged__ - Add a nifty badge to your repo's README.</mark>
 
-<mark>4. __Explore more complex scenarios__ - Leverage the Ruby Orb's built-in parallelism feature on larger projects, or configure your project to process coverage results from multiple test suites.</mark>
+1. __Configure PR comments__ - Inform collaborators of changes to test coverage to consider before merging.
+2. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
+3. __Explore more complex scenarios__ - Leverage the Ruby Orb's built-in parallelism feature on larger projects.
 
 Start with the Coveralls docs here.
 
@@ -797,16 +734,16 @@ Start with the Coveralls docs here.
 <a name="next_steps"></a>
 # To Do
 
-<mark>1. Resolve whether to explore parallelism. Leaning toward not.</mark>
+<mark>1. In Finish Setup, add step to create COVERALLS_REPO_TOKEN in CI env vars.</mark>
 
-<mark>2. Resolve whether/how to leverage the Ruby Orb's default test-results directory for test coverage results.</mark>
+<mark>2. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
 
-<mark>3. In Finish Setup, include adding COVERALLS_REPO_TOKEN to CI env vars.</mark>
+<mark>3. Add back Get Badged section; remove Get Badged from Next Steps.</mark>
 
-<mark>4. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
+<mark>4. Conclusion - restate the problem and solution.</mark>
 
-<mark>5. Conclusion - restate the problem and solution.</mark>
+<mark>5. Remove yellow sections.</mark>
 
-<mark>6. Remove yellow sections.</mark>
+<mark>6. Add two (2) missing images; replace three (3) wrong images referring to COVERALLSAPP/coveralls-demo-ruby; replace one (1) wrong image referring to Travis CI.</mark>
 
-<mark>7. Add remaining images.</mark>
+<mark>7. Add links to any remaining services or definitions.</mark>
