@@ -403,7 +403,7 @@ Your URL will be different, but should follow this format:
 https://app.circleci.com/pipelines/github/<your-github-username>/<your-github-repo>
 ```
 
-So we're checking our first build, and&mdash;*Whoops!* That doesn't look right&mdash;
+So we're checking our first build, and&mdash;*whoops, that doesn't look right*&mdash;
 
 Our first build has failed:
 
@@ -418,7 +418,7 @@ bundler: failed to load command: rspec [...]
 LoadError: cannot load such file -- rspec_junit_formatter
 ```
 
-The CircleCI Ruby Orb seems to be looking for `rspec_junit_formatter`, which, upon reviewing the [orb docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), makes complete sense:
+The CircleCI Ruby Orb seems to be looking for `rspec_junit_formatter`, which, upon reviewing the [orb docs](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test), makes sense:
 
 ![circleci-ruby-orb-rspec-test-command-docs.png]({{ site.url }}/assets/circleci-ruby-orb-rspec-test-command-docs.png)
 
@@ -494,8 +494,8 @@ Notice those test results, which look much like the ones we got from [running on
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
 [...]
 
-  ClassOne covered returns 'covered'
-    0.00042 seconds ./spec/class_one_spec.rb:7
+ClassOne covered returns 'covered'
+  0.00042 seconds ./spec/class_one_spec.rb:7
 
 Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 1 example, 0 failures
@@ -503,7 +503,7 @@ Finished in 0.0019 seconds (files took 0.12922 seconds to load)
 Coverage report generated for RSpec to /home/circleci/project/coverage. 4 / 5 LOC (80.0%) covered.
 ```
 
-The only difference being that, before that output, the Ruby Orb's `rspec-test` command is calling `bundle exec rspec` with a number of additional parameters, telling RSpec how to format its results and where to store them:
+The only difference being that, before the results, the Ruby Orb's `rspec-test` command is calling `bundle exec rspec` with a number of additional parameters, telling RSpec how to format its results and where to store them:
 
 ```ruby
 bundle exec rspec $TESTFILES --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec/results.xml --format progress
@@ -785,7 +785,9 @@ Now that your project's set up to track test coverage in CI, some of the next th
 
 1. __Get badged__ - Add a nifty badge to your repo's README.
 2. __Configure PR comments__ - Inform collaborators of changes to test coverage to consider before merging.
-2. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
+3. __Set up pass/fail checks__ - Block merging unless coverage thresholds you define are met.
+
+<mark>4. __Explore more complex scenarios__ - Leverage the Ruby Orb's built-in parallelism feature on larger projects, or configure your project to process coverage results from multiple test suites.</mark>
 
 Start with the Coveralls docs here.
 
