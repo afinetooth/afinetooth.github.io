@@ -803,6 +803,8 @@ Start with the Coveralls docs here.
 
 <mark>4. Consider adding COVERALLS_VERBOSE, or just refer to verbose output via use of flag.</mark>
 
-<mark>5. Remove yellow sections.</mark>
+<mark>5. Conclusion - restate the problem and solution.</mark>
 
-<mark>6. Add remaining images.</mark>
+<mark>6. Remove yellow sections.</mark>
+
+<mark>7. Add remaining images.</mark>
