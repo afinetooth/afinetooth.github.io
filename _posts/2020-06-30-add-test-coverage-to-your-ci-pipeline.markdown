@@ -35,13 +35,13 @@ Note: *We'll create a free Coveralls account along the way.*
 
 If you're new to test *coverage*, here's how it works:
 
-For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being covered by its tests. (*In the case of our Ruby project, we're using a test coverage library called Simplecov.*)
+For a project made up of code and tests, a test *coverage* library can be added to assess how well the project's code is being *covered* by its tests. (*In the case of our Ruby project, we're using a test coverage library called Simplecov.*)
 
 On each run of your project's test suite, the test coverage *library* generates a test coverage *report*, like so:
 
 ![test coverage]({{ site.url }}/assets/test_coverage.png)
 
-Since this test coverage *report* changes each time we add code to our project, the *report* is what we send to a service like Coveralls, which compares it to previous reports and tracks how our test coverage changes over time.
+Since this test coverage report *changes* each time we add code to our project, the *report* is what we send to a service like Coveralls, which compares it to previous reports and tracks how our test coverage changes over time.
 
 <p>&nbsp;</p>
 
@@ -350,7 +350,7 @@ jobs:
 
 [Jobs](https://circleci.com/docs/2.0/jobs-steps/#section=getting-started), of course, are the main building blocks of your pipeline, which are comprised of [Steps](https://circleci.com/docs/2.0/concepts/#steps) and the commands that do the work of your pipeline.
 
-Note that in the final step of our job, we're using a built-in command for running rspec tests that comes with CircleCI's new [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby), called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test):
+Note that in the final step of our job, we're using a built-in command for running RSpec tests that comes with CircleCI's new [Ruby Orb](https://circleci.com/orbs/registry/orb/circleci/ruby), called [`rspec-test`](https://circleci.com/orbs/registry/orb/circleci/ruby#commands-rspec-test):
 
 ```ruby
 steps:
@@ -358,7 +358,7 @@ steps:
    - ruby/rspec-test
 ```
 
-Not only does this provide a one-liner for running our Rspec tests, it also gives us some freebies, including: automated parallelization; and a default test results directory.
+Not only does this provide a one-liner for running our RSpec tests, it also gives us some freebies, including: automated parallelization; and a default test results directory.
 
 #### Why automated parallelization?
 It allows us to run tests from our test suite [in parallel](https://circleci.com/docs/2.0/parallelism-faster-jobs/), without any additional configuration, which improves speed and is particularly handy when we're running a lot of tests.
@@ -572,7 +572,7 @@ SimpleCov.formatter = SimpleCov::Formatter::LcovFormatter
 
 <p>&nbsp;</p>
 
-As our final step, we'll add the Coveralls Orb to the `orbs` section of our `.circelci/config.yml`:
+Next, we'll add the Coveralls Orb to the `orbs` section of our `.circelci/config.yml`:
 
 ```ruby
 # .circleci/config.yml
@@ -585,7 +585,7 @@ orbs:
 [...]
 ```
 
-And in the `jobs` section, we'll add a step to our `build` job to call the Coveralls Orb's `upload` command, including the `path_to_lcov` parameter, which tells `coveralls/upload` where to find the coverage report it should upload to the Coveralls API:
+And in the `jobs` section, we'll add a new step to our `build` job:
 
 ```ruby
 # /circleci/config.yml
@@ -607,6 +607,8 @@ jobs:
 
 [...]
 ```
+
+That command, `coveralls/upload`, calls the Coveralls Orb's `upload` command. And below it, we'll include the `path_to_lcov` parameter, which tells the orb where to find the coverage report it should upload to the Coveralls API:
 
 Now push those changes:
 
